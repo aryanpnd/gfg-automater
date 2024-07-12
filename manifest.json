@@ -1,7 +1,7 @@
 {
-  "name": "test",
+  "name": "GFG Automater",
   "version": "0.1.0",
-  "description": "test",
+  "description": "An automation tool for gfg course, developed by aryan",
   "permissions": ["storage", "tabs", "activeTab", "notifications"],
   "host_permissions": ["https://*.geeksforgeeks.org/*"],
   "background": {
