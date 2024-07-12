@@ -1,0 +1,32 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "description": "test",
+  "permissions": ["storage", "tabs", "activeTab", "notifications"],
+  "host_permissions": ["https://*.geeksforgeeks.org/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.geeksforgeeks.org/*"],
+      "js": ["contentScript.js"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": ["https://*.geeksforgeeks.org/*"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "24": "assets/icon48.png",
+      "32": "assets/icon128.png"
+    },
+    "default_title": "test",
+    "default_popup": "popup.html"
+  },
+  "manifest_version": 3
+}
