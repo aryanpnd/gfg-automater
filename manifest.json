@@ -15,7 +15,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": [],
+      "resources": ["notification.mp3"],
       "matches": ["https://*.geeksforgeeks.org/*"]
     }
   ],
@@ -25,8 +25,9 @@
       "24": "assets/icon48.png",
       "32": "assets/icon128.png"
     },
-    "default_title": "test",
+    "default_title": "GFG Automater",
     "default_popup": "popup.html"
   },
+  
   "manifest_version": 3
 }

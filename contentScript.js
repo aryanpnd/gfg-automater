@@ -112,9 +112,13 @@ function checkForArticleTab() {
       setTimeout(selectAndNavigateArticles, 1000); // Wait a second for the new sidebar to load
     } else {
       chrome.runtime.sendMessage({ message: 'allVideosEnded' });
+      const audio = new Audio(chrome.runtime.getURL('notification.mp3'));
+      audio.play();
     }
   } else {
     chrome.runtime.sendMessage({ message: 'allVideosEnded' });
+    const audio = new Audio(chrome.runtime.getURL('notification.mp3'));
+    audio.play();
   }
 }
 
@@ -153,6 +157,8 @@ function selectAndNavigateArticles() {
         } else {
           // All articles processed
           chrome.runtime.sendMessage({ message: 'allArticlesEnded' });
+          const audio = new Audio(chrome.runtime.getURL('notification.mp3'));
+          audio.play();
         }
       }
 
@@ -170,7 +176,7 @@ function selectAndNavigateArticles() {
 function addVideoEventListener() {
   const video = document.querySelector('video');
   if (video) {
-    video.playbackRate = 2.0; // Set video speed to 2x
+    video.playbackRate = 2.0; 
     video.play();
     video.removeEventListener('ended', handleVideoEnd); // Remove any existing listener to avoid duplicate calls
     video.addEventListener('ended', handleVideoEnd);
@@ -190,7 +196,7 @@ function startVideos() {
   ).singleNodeValue;
 
   if (sidebar) {
-    videos = sidebar.querySelectorAll('a'); // Select the anchor tags inside the sidebar
+    videos = sidebar.querySelectorAll('a');
     totalVideos = videos.length;
 
     if (totalVideos > 0) {
