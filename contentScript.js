@@ -222,6 +222,11 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     startVideos();
     sendResponse({ status: "started" });
   }
+  if (request.action === 'startArticle') {
+    console.log("Received startArticle message");
+    checkForArticleTab();
+    sendResponse({ status: "started" });
+  }
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
