@@ -91,12 +91,12 @@ function handleVideoEnd() {
     setTimeout(addVideoEventListener, 1000); // Wait a second for the next video to load
     chrome.runtime.sendMessage({ action: 'nextVideo' });
   } else {
-    checkForArticleTab();
+    checkForArticleTab(true);
     console.log("all videos ended");
   }
 }
 
-function checkForArticleTab() {
+function checkForArticleTab(automate) {
   const sidebar = document.evaluate(
     '//*[@id="__next"]/div/section[2]/section[1]/div[1]/div[2]/div[1]/div[1]/div[1]',
     document,
@@ -109,7 +109,8 @@ function checkForArticleTab() {
     const articleTab = Array.from(sidebar.querySelectorAll('p')).find(p => p.textContent.trim().toLowerCase() === 'articles');
     if (articleTab) {
       articleTab.parentElement.click();
-      setTimeout(selectAndNavigateArticles, 1000); // Wait a second for the new sidebar to load
+      if (automate) setTimeout(selectAndNavigateArticles, 1000); // Wait a second for the new sidebar to load
+      return true
     } else {
       chrome.runtime.sendMessage({ message: 'allVideosEnded' });
       const audio = new Audio(chrome.runtime.getURL('notification.mp3'));
@@ -176,7 +177,7 @@ function selectAndNavigateArticles() {
 function addVideoEventListener() {
   const video = document.querySelector('video');
   if (video) {
-    video.playbackRate = 2.0; 
+    video.playbackRate = 2.0;
     video.play();
     video.removeEventListener('ended', handleVideoEnd); // Remove any existing listener to avoid duplicate calls
     video.addEventListener('ended', handleVideoEnd);
@@ -202,7 +203,7 @@ function startVideos() {
     if (totalVideos > 0) {
       // Find the currently active video
       const activeVideoDiv = Array.from(sidebar.querySelectorAll('a')).find(div => div.className.includes('active'));
-      
+
       if (activeVideoDiv) {
         currentVideoIndex = Array.from(videos).indexOf(activeVideoDiv);
         if (currentVideoIndex > -1) {
@@ -222,19 +223,20 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     startVideos();
     sendResponse({ status: "started" });
   }
-  if (request.action === 'startArticle') {
+  if (request.action === 'startArticles') {
     console.log("Received startArticle message");
-    checkForArticleTab();
+    checkForArticleTab(true);
     sendResponse({ status: "started" });
   }
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'checkVideo') {
+  if (request.action === 'checkVideoAndArticle') {
+    const article = checkForArticleTab(false)
     const video = document.querySelector('video');
-    sendResponse({ videoExists: !!video });
-  } 
-  return true; 
+    sendResponse({ videoExists: !!video, articleExists: !!article });
+  }
+  return true;
 });
 
 // Observe DOM changes and keep updating video details

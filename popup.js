@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (targetTab) {
 
-      chrome.tabs.sendMessage(targetTab.id, { action: 'checkVideo' }, function (response) {
+      chrome.tabs.sendMessage(targetTab.id, { action: 'checkVideoAndArticle' }, function (response) {
         if (chrome.runtime.lastError) {
           console.error("Error sending message:", chrome.runtime.lastError);
           return;
         }
+        console.log(response);
 
-        if (response && response.videoExists) {
-          console.log("video exists");
+        if (response && (response.videoExists || response.articleExists)) {
 
           if (bodyElement) {
             bodyElement.style.display = "block";
@@ -88,12 +88,12 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
-  
+
   const articleStartButton = document.getElementById('articleStartButton');
   if (articleStartButton) {
     articleStartButton.addEventListener('click', function () {
       chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'checkForArticleTab' }, function (response) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'startArticles' }, function (response) {
           if (chrome.runtime.lastError) {
             console.error("Error sending message:", chrome.runtime.lastError);
           } else {
